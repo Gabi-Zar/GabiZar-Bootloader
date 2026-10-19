@@ -4,6 +4,8 @@
 .align 2
 .thumb
 .global jump_to_firmware
+.type jump_to_firmware, %function
+.thumb_func
 jump_to_firmware:
   msr msp, r0
   bx r1

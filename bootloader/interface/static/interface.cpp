@@ -4,13 +4,14 @@
 #include <bootloader/interface/static/interface.h>
 #include <bootloader/interface/static/messages.h>
 
-#include <bootloader/computer.h>
+#include <bootloader/frame_1.h>
+#include <bootloader/frame_2.h>
+#include <bootloader/frame_3.h>
+
 
 namespace Bootloader {
 
-void Interface::drawComputer(KDContext * ctx, int offset) {
-  const Image * image = ImageStore::Computer;
-
+void drawImage(const Image * image, KDContext * ctx, int offset) {
   const uint8_t * data;
   size_t size;
   size_t pixelBufferSize;
@@ -23,8 +24,8 @@ void Interface::drawComputer(KDContext * ctx, int offset) {
     return;
   }
 
-  KDColor pixelBuffer[4000];
-  assert(pixelBufferSize <= 4000);
+  KDColor pixelBuffer[2500];
+  assert(pixelBufferSize <= 2500);
   assert(Ion::stackSafe()); // That's a VERY big buffer we're allocating on the stack
 
   Ion::decompress(
@@ -39,36 +40,55 @@ void Interface::drawComputer(KDContext * ctx, int offset) {
   ctx->fillRectWithPixels(bounds, pixelBuffer, nullptr);
 }
 
+void Interface::drawComputer(KDContext * ctx, int offset) {
+  const Image * frames[] = {
+    ImageStore::Frame1,
+    ImageStore::Frame2,
+    ImageStore::Frame3,
+  };
+
+  for (uint8_t i = 0; i < 3; i++) {
+    drawImage(frames[i], ctx, offset);
+    Ion::Timing::msleep(50);
+  }
+}
+
 KDCoordinate Interface::computerHeight() {
-  return ImageStore::Computer->height();
+  return ImageStore::Frame1->height();
 }
 
 void Interface::drawFlasher() {
   KDContext * ctx = KDIonContext::sharedContext();
 
-  ctx->fillRect(KDRect(0, 0, 320, 240), KDColorWhite);
+  ctx->fillRect(KDRect(0, 0, 320, 240), KDColorBlack);
   drawComputer(ctx, 25);
 
   KDSize fontSize = KDFont::LargeFont->glyphSize();
   int initPos = (320 - fontSize.width() * strlen(Messages::mainTitle)) / 2;
-  ctx->drawString(Messages::mainTitle, KDPoint(initPos, ImageStore::Computer->height() + 25 + 10), KDFont::LargeFont, KDColorBlack, KDColorWhite);
+  ctx->drawString(Messages::mainTitle, KDPoint(initPos, ImageStore::Frame1->height() + 25 + 10), KDFont::LargeFont, KDColorWhite, KDColorBlack);
 
-  int y = ImageStore::Computer->height() + 25 + 10 + (KDFont::SmallFont->glyphSize().height() + 10);
+  int y = ImageStore::Frame1->height() + 25 + 10 + (KDFont::SmallFont->glyphSize().height() + 10);
   initPos = (320 - KDFont::SmallFont->glyphSize().width() * strlen(Messages::dfuSlotsUpdate)) / 2;
-  ctx->drawString(Messages::dfuSlotsUpdate, KDPoint(initPos, y), KDFont::SmallFont, KDColorBlack, KDColorWhite);
+  ctx->drawString(Messages::dfuSlotsUpdate, KDPoint(initPos, y), KDFont::SmallFont, KDColorWhite, KDColorBlack);
 }
 
 void Interface::drawLoading() {
+  const Image * frames[] = {
+    ImageStore::Frame1,
+    ImageStore::Frame2,
+    ImageStore::Frame3,
+  };
   KDContext * ctx = KDIonContext::sharedContext();
-  ctx->fillRect(KDRect(0, 0, 320, 240), KDColorWhite);
-  drawComputer(ctx, 25);
-  Ion::Timing::msleep(250);
+  ctx->fillRect(KDRect(0, 0, 320, 240), KDColorBlack);
+  //drawComputer(ctx, 25);
+  Ion::Timing::msleep(100);
   KDSize fontSize = KDFont::LargeFont->glyphSize();
   int initPos = (320 - fontSize.width() * strlen(Messages::mainTitle)) / 2;
 
   for (uint8_t i = 0; i < strlen(Messages::mainTitle); i++) {
+    drawImage(frames[i % 3], ctx, 25);
     char tmp[2] = {Messages::mainTitle[i], '\0'};
-    ctx->drawString(tmp, KDPoint(initPos + i * (fontSize.width()), ImageStore::Computer->height() + 25 + 10), KDFont::LargeFont, KDColorBlack, KDColorWhite);
+    ctx->drawString(tmp, KDPoint(initPos + i * (fontSize.width()), ImageStore::Frame1->height() + 25 + 10), KDFont::LargeFont, KDColorWhite, KDColorBlack);
 
     int t = 50;
     Ion::Events::Event e = Ion::Events::getEvent(&t);
@@ -76,7 +96,7 @@ void Interface::drawLoading() {
       return;
     }
   }
-  Ion::Timing::msleep(500);
+  Ion::Timing::msleep(200);
 }
 
 }

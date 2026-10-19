@@ -478,7 +478,7 @@ void AppsContainer::activateExamMode(GlobalPreferences::ExamMode examMode) {
    * confusing states when the battery is charging and states when the Dutch
    * exam mode is on. */
   // Ion::LED::setColor(examMode == GlobalPreferences::ExamMode::Dutch ? KDColorYellow : KDColorRed);
-  Ion::LED::setBlinking(1000, 0.1f);
+  Ion::LED::setBlinking(2000, 0.1f);
 }
 
 void AppsContainer::examDeactivatingPopUpIsDismissed() {

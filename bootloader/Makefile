@@ -33,16 +33,20 @@ bootloader_src += $(addprefix bootloader/interface/src/,\
 bootloader_src += $(addprefix bootloader/interface/menus/, \
   about.cpp \
   home.cpp \
+  slot_utils.cpp \
   dfu.cpp \
   installer.cpp \
   warning.cpp \
   slot_recovery.cpp \
   crash.cpp \
   upsilon_recovery.cpp \
+  exam.cpp \
 )
 
 bootloader_images = $(addprefix bootloader/, \
-  computer.png \
+  frame_1.png \
+  frame_2.png \
+  frame_3.png \
 )
 
 bootloader_src += $(ion_src) $(simple_kandinsky_src) $(liba_src) $(libaxx_src) $(bootloader_images)

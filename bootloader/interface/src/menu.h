@@ -52,10 +52,10 @@ namespace Bootloader {
 
       class SlotColumn : public Column {
         public:
-          SlotColumn() : Column(), m_kernalPatch(nullptr), m_osType(nullptr), m_kernelVersion(nullptr) {};
+          SlotColumn() : Column(), m_kernalPatch(nullptr), m_osType(nullptr), m_kernelVersion(nullptr), m_examState(nullptr) {};
 
-          SlotColumn(const char * t, Ion::Keyboard::Key k, const KDFont * font, int extraX, bool center, bool(*pointer)()) : Column(t, k, font, extraX, center, pointer), m_kernalPatch(nullptr), m_osType(nullptr), m_kernelVersion(nullptr) {};
-          SlotColumn(const char * t, const char * k, const char * o, const char * kernelV, Ion::Keyboard::Key key, const KDFont * font, int extraX, bool center, bool(*pointer)()) : Column(t, key, font, extraX, center, pointer), m_kernalPatch(k), m_osType(o), m_kernelVersion(kernelV) {};
+          SlotColumn(const char * t, Ion::Keyboard::Key k, const KDFont * font, int extraX, bool center, bool(*pointer)()) : Column(t, k, font, extraX, center, pointer), m_kernalPatch(nullptr), m_osType(nullptr), m_kernelVersion(nullptr), m_examState(nullptr) {};
+          SlotColumn(const char * t, const char * k, const char * o, const char * kernelV, const char * examS, Ion::Keyboard::Key key, const KDFont * font, int extraX, bool center, bool(*pointer)()) : Column(t, key, font, extraX, center, pointer), m_kernalPatch(k), m_osType(o), m_kernelVersion(kernelV), m_examState(examS) {};
 
           int draw(KDContext * ctx, int y, KDColor background, KDColor foreground) override;
           virtual int columnType() { return ColumnType::SLOT; };
@@ -64,6 +64,7 @@ namespace Bootloader {
           const char * m_kernalPatch;
           const char * m_osType;
           const char * m_kernelVersion;
+          const char * m_examState;
       };
 
       class ColumnBinder {

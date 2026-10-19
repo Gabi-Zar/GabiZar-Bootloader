@@ -4,6 +4,10 @@
 #include <assert.h>
 #include <ion/backlight.h>
 
+#ifdef DEVICE_BOOTLOADER
+#include <ion/src/device/shared/drivers/reset.h>
+#endif
+
 using namespace Poincare;
 using namespace Shared;
 
@@ -72,6 +76,15 @@ bool MainController::handleEvent(Ion::Events::Event event) {
       }
       return false;
     }
+#ifdef DEVICE_BOOTLOADER
+    if (model()->childAtIndex(selectedRow())->label() == I18n::Message::RebootToBootloader) {
+      if (event == Ion::Events::OK || event == Ion::Events::EXE) {
+        Ion::Device::Reset::core();
+        return true;
+      }
+      return false;
+    }
+#endif
     if (model()->childAtIndex(selectedRow())->label() == I18n::Message::Language || model()->childAtIndex(selectedRow())->label() == I18n::Message::Country) {
       if (event == Ion::Events::OK || event == Ion::Events::EXE || event == Ion::Events::Right) {
         m_localizationController.setMode(model()->childAtIndex(selectedRow())->label() == I18n::Message::Language ? LocalizationController::Mode::Language : LocalizationController::Mode::Country);

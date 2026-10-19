@@ -4,6 +4,7 @@
 #include <bootloader/interface/src/menu.h>
 #include <bootloader/interface/menus/about.h>
 #include <bootloader/interface/menus/installer.h>
+#include <bootloader/interface/menus/exam.h>
 #include <bootloader/slots/slot.h>
 
 namespace Bootloader {
@@ -16,12 +17,7 @@ namespace Bootloader {
 
       static AboutMenu * aboutMenu();
       static InstallerMenu * installerMenu();
-
-    private:
-      const char * getSlotOsText(Slot slot);
-      const char * getSlotText(Slot slot);
-      const char * getKernelText(Slot slot);
-      const char * getVersionText(Slot slot);
+      static ExamMenu * examMenu();
   };
 }
 

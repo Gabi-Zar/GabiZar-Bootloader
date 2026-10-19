@@ -2,6 +2,7 @@
 #include <bootloader/boot.h>
 #include <bootloader/slots/slot.h>
 #include <bootloader/interface/menus/about.h>
+#include <bootloader/interface/menus/slot_utils.h>
 #include <stdlib.h>
 
 Bootloader::AboutMenu * Bootloader::HomeMenu::aboutMenu() {
@@ -14,7 +15,12 @@ Bootloader::InstallerMenu * Bootloader::HomeMenu::installerMenu() {
   return installerMenu;
 }
 
-Bootloader::HomeMenu::HomeMenu() : Menu(KDColorBlack, KDColorWhite, Messages::homeTitle, Messages::mainTitle) {
+Bootloader::ExamMenu * Bootloader::HomeMenu::examMenu() {
+  static ExamMenu * examMenu = new ExamMenu();
+  return examMenu;
+}
+
+Bootloader::HomeMenu::HomeMenu() : Menu(KDColorWhite, KDColorBlack, Messages::homeTitle, Messages::mainTitle) {
   setup();
 }
 
@@ -52,40 +58,9 @@ bool about_submenu() {
   return true;
 }
 
-const char * Bootloader::HomeMenu::getSlotOsText(Slot slot) {
-  if (Slot::isFullyValid(slot)) {
-    if (slot.userlandHeader()->isOmega() && slot.userlandHeader()->isUpsilon()) {
-      return Messages::upsilonSlot;
-    } else if (slot.userlandHeader()->isOmega() && slot.kernelHeader()->patchLevel()[0] != '\0') {
-      return Messages::omegaSlot;
-    } else if (slot.userlandHeader()->isOmega()) {
-      return Messages::khiSlot;
-    } else {
-      return Messages::epsilonSlot;
-    }
-  }
-  return nullptr;
-}
-
-const char * Bootloader::HomeMenu::getSlotText(Slot slot) {
-  if(Slot::isFullyValid(slot)) {
-    if (slot.address() == Slot::A().address()) {
-        return Messages::homeSlotASubmenu;
-    } else if (slot.address() == Slot::Khi().address()) {
-        return Messages::homeSlotKhiSubmenu;
-    } else if (slot.address() == Slot::B().address()) {
-        return Messages::homeSlotBSubmenu;
-    }
-  }
-  return Messages::invalidSlot;
-}
-
-const char * Bootloader::HomeMenu::getKernelText(Slot slot) {
-  return Slot::isFullyValid(slot) ? slot.kernelHeader()->patchLevel() : nullptr;
-}
-
-const char * Bootloader::HomeMenu::getVersionText(Slot slot) {
-  return Slot::isFullyValid(slot) ? slot.userlandHeader()->isOmega() && slot.userlandHeader()->isUpsilon() ? slot.userlandHeader()->upsilonVersion() : slot.userlandHeader()->isOmega() ? slot.userlandHeader()->omegaVersion() : slot.kernelHeader()->version() : nullptr;
+bool exam_submenu() {
+  Bootloader::HomeMenu::examMenu()->open();
+  return true;
 }
 
 void Bootloader::HomeMenu::setup() {
@@ -93,15 +68,17 @@ void Bootloader::HomeMenu::setup() {
   Slot Khi = Slot::Khi();
   Slot B = Slot::B();
 
-  m_slotColumns[0] = SlotColumn(getSlotText(A), getKernelText(A), getSlotOsText(A), getVersionText(A),  Ion::Keyboard::Key::One, k_small_font, 10, false, &slotA_submenu);
-  m_slotColumns[1] = SlotColumn(getSlotText(Khi), getKernelText(Khi), getSlotOsText(Khi), getVersionText(Khi), Ion::Keyboard::Key::Two, k_small_font, 10, false, &slotKhi_submenu);
-  m_slotColumns[2] = SlotColumn(getSlotText(B), getKernelText(B), getSlotOsText(B), getVersionText(B), Ion::Keyboard::Key::Three, k_small_font, 10, false, &slotB_submenu);
+  m_slotColumns[0] = SlotColumn(getSlotText(A), getKernelText(A), getSlotOsText(A), getVersionText(A), "", Ion::Keyboard::Key::One, k_small_font, 10, false, &slotA_submenu);
+  m_slotColumns[1] = SlotColumn(getSlotText(Khi), getKernelText(Khi), getSlotOsText(Khi), getVersionText(Khi), "", Ion::Keyboard::Key::Two, k_small_font, 10, false, &slotKhi_submenu);
+  m_slotColumns[2] = SlotColumn(getSlotText(B), getKernelText(B), getSlotOsText(B), getVersionText(B), "", Ion::Keyboard::Key::Three, k_small_font, 10, false, &slotB_submenu);
   m_defaultColumns[0] = Column(Messages::homeInstallerSubmenu, Ion::Keyboard::Key::Four, k_small_font, 10, false, &installer_submenu);
-  m_defaultColumns[1] = Column(Messages::homeAboutSubmenu, Ion::Keyboard::Key::Five, k_small_font, 10, false, &about_submenu);
+  m_defaultColumns[1] = Column(Messages::homeAboutSubmenu, Ion::Keyboard::Key::Six, k_small_font, 10, false, &about_submenu);
+  m_defaultColumns[2] = Column(Messages::homeExamSubmenu, Ion::Keyboard::Key::Five, k_small_font, 10, false, &exam_submenu);
 
   m_columns[0] = ColumnBinder(&m_slotColumns[0]);
   m_columns[1] = ColumnBinder(&m_slotColumns[1]);
   m_columns[2] = ColumnBinder(&m_slotColumns[2]);
   m_columns[3] = ColumnBinder(&m_defaultColumns[0]);
-  m_columns[4] = ColumnBinder(&m_defaultColumns[1]);
+  m_columns[4] = ColumnBinder(&m_defaultColumns[2]);
+  m_columns[5] = ColumnBinder(&m_defaultColumns[1]);
 }

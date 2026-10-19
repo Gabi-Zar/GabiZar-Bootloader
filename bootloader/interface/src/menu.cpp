@@ -130,5 +130,9 @@ int Bootloader::Menu::SlotColumn::draw(KDContext * ctx, int y, KDColor backgroun
   if (m_kernelVersion != nullptr) {
     ctx->drawString(m_kernelVersion, KDPoint(x, y), m_font, foreground, background);
   }
+  x += strlen(m_kernelVersion) * m_font->glyphSize().width() + m_font->glyphSize().width();
+  if (m_examState != nullptr) {
+    ctx->drawString(m_examState, KDPoint(x, y), m_font, foreground, background);
+  }
   return m_font->glyphSize().height();
 }

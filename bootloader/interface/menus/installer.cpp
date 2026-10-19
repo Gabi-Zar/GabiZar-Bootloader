@@ -5,18 +5,18 @@
 #include <bootloader/interface/menus/dfu.h>
 
 Bootloader::DfuMenu * Bootloader::InstallerMenu::SlotsDFU() {
-  USBData data = USBData::DEFAULT();
+  static const USBData data = USBData::DEFAULT();
   static DfuMenu * slotsDfu = new DfuMenu(Messages::dfuSlotsUpdate, &data);
   return slotsDfu;
 }
 
 Bootloader::DfuMenu * Bootloader::InstallerMenu::BootloaderDFU() {
-  USBData data = USBData::BOOTLOADER_UPDATE();
+  static const USBData data = USBData::BOOTLOADER_UPDATE();
   static DfuMenu * bootloaderDfu = new DfuMenu(Messages::dfuBootloaderUpdate, &data);
   return bootloaderDfu;
 }
 
-Bootloader::InstallerMenu::InstallerMenu() : Menu(KDColorBlack, KDColorWhite, Messages::installerTitle, Messages::mainTitle) {
+Bootloader::InstallerMenu::InstallerMenu() : Menu(KDColorWhite, KDColorBlack, Messages::installerTitle, Messages::mainTitle) {
   setup();
 }
 

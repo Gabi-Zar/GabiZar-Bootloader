@@ -5,7 +5,7 @@ namespace Bootloader {
 
 class Messages {
 public:
-  constexpr static const char * mainTitle = "Upsilon Calculator";
+  constexpr static const char * mainTitle = "GabiZar Calculator";
 
   // Home menu
   constexpr static const char * homeTitle = "Select a slot";
@@ -22,8 +22,9 @@ public:
   constexpr static const char * homeSlotKhiSubmenu = "2 - Slot Khi";
   constexpr static const char * homeSlotBSubmenu = "3 - Slot B";
   constexpr static const char * homeInstallerSubmenu = "4 - Installer Mode";
-  constexpr static const char * homeAboutSubmenu = "5 - About";
+  constexpr static const char * homeAboutSubmenu = "6 - About";
   constexpr static const char * homeRebootSubmenu = "6 - Reboot";
+  constexpr static const char * homeExamSubmenu = "5 - Exam Mode Manager";
 
   // DFU menu
   constexpr static const char * dfuTitle = "Installer";
@@ -75,13 +76,16 @@ public:
   // About menu
   constexpr static const char * aboutMenuTitle = "About";
 
-  constexpr static const char * aboutMessage1 = "This is the bootloader of";
-  constexpr static const char * aboutMessage2 = "the Upsilon Calculator.";
-  constexpr static const char * aboutMessage3 = "It is used to install";
-  constexpr static const char * aboutMessage4 = "and select the OS";
-  constexpr static const char * aboutMessage5 = "to boot.";
+  constexpr static const char * aboutMessage1 = "This is GabiZar bootloader a";
+  constexpr static const char * aboutMessage2 = "fork of the Upsilon bootloader.";
+  constexpr static const char * aboutMessage3 = "It is used to flash, boot,";
+  constexpr static const char * aboutMessage4 = "and disable exam mode";
+  constexpr static const char * aboutMessage5 = "on the selected slot.";
 
-  constexpr static const char * bootloaderVersion = "Version 1.1.3 - RECOVER.26.4";
+  constexpr static const char * bootloaderVersion = "Gabizar 1.0.0 - Upsilon 1.1.3 - RECOVER.26.4";
+
+  // Exam menu
+  constexpr static const char * examMenuTitle = "Exam mode manager";
 
   //USB NAMES
   constexpr static const char * usbUpsilonBootloader = "NumWorks Calculator";
