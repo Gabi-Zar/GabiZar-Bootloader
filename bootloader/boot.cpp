@@ -45,7 +45,7 @@ void Boot::busError() {
 }
 
 bool Boot::isKernelPatched(const Slot & s) {
-  if (s.userlandHeader()->isOmega()) {
+  if (s.userlandHeader()->isOmega() || strncmp(s.kernelHeader()->patchLevel(), "gabizar", 8) == 0) {
     // we don't need to patch the kernel
     return true;
   }

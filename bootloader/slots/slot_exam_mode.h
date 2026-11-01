@@ -17,6 +17,9 @@ static const uint32_t SlotAExamModeBufferEndEpsilon16 = 0x90400000;
 static const uint32_t SlotAExamModeBufferStartEpsilon22 = 0x903f0400;
 static const uint32_t SlotAExamModeBufferEndEpsilon22 = 0x90400000;
 
+static const uint32_t SlotAExamModeBufferStartGabiZar = 0x90010400;
+static const uint32_t SlotAExamModeBufferEndGabiZar = 0x90020000;
+
 static const uint32_t SlotBExamModeBufferStartBeforeEpsilon16 = 0x90401000;
 static const uint32_t SlotBExamModeBufferEndBeforeEpsilon16 = 0x90403000;
 
@@ -26,15 +29,18 @@ static const uint32_t SlotBExamModeBufferEndEpsilon16 = 0x90800000;
 static const uint32_t SlotBExamModeBufferStartEpsilon22 = 0x907f0400;
 static const uint32_t SlotBExamModeBufferEndEpsilon22 = 0x90800000;
 
+static const uint32_t SlotBExamModeBufferStartGabiZar = 0x90410400;
+static const uint32_t SlotBExamModeBufferEndGabiZar   = 0x90420000;
+
 static const uint32_t SlotKhiExamModeBufferStart = 0x90181000;
 static const uint32_t SlotKhiExamModeBufferEnd = 0x90183000;
 
 class SlotsExamMode{
   public:
-    static uint8_t FetchSlotExamMode(const char* version, const char* Slot);
-    static uint8_t FetchSlotAExamMode(const char* version);
-    static uint8_t FetchSlotBExamMode(const char* version);
-    static uint8_t FetchSlotKhiExamMode(const char* version);
+    static uint8_t FetchSlotExamMode(const char* version, const char* Slot, const char* patchLevel);
+    static uint8_t FetchSlotAExamMode(const char* version, const char* patchLevel);
+    static uint8_t FetchSlotBExamMode(const char* version, const char* patchLevel);
+    static uint8_t FetchSlotKhiExamMode(const char* version, const char* patchLevel);
 
     static uint32_t getSlotAStartExamAddress(int ExamVersion);
     static uint32_t getSlotAEndExamAddress(int ExamVersion);

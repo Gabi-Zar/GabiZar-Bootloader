@@ -40,13 +40,17 @@ size_t numberOfBitsAfterLeadingZeroes(int i) {
   return maxShift;
 }
 
-uint8_t SlotsExamMode::FetchSlotExamMode(const char * version, const char * Slot) {
+uint8_t SlotsExamMode::FetchSlotExamMode(const char * version, const char * Slot, const char * patchLevel) {
   // Get start and end from version and slot
   uint32_t start = 0;
   uint32_t end = 0;
-  if (Slot == "A") {
+  if (strcmp(Slot, "A") == 0) {
+    if (strncmp(patchLevel, "gabizar", 8) == 0) {
+      start = getSlotAStartExamAddress(3);
+      end = getSlotAEndExamAddress(3);
+    }
     // If version under 16 get old addresses
-    if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
+    else if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
       start = getSlotAStartExamAddress(0);
       end = getSlotAEndExamAddress(0);
     }
@@ -61,9 +65,13 @@ uint8_t SlotsExamMode::FetchSlotExamMode(const char * version, const char * Slot
       end = getSlotAEndExamAddress(2);
     }
   }
-  else if (Slot == "B") {
+  else if (strcmp(Slot, "B") == 0) {
+    if (strncmp(patchLevel, "gabizar", 8) == 0) {
+      start = getSlotBStartExamAddress(3);
+      end = getSlotBEndExamAddress(3);
+    }
     // If version under 16 get old
-    if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
+    else if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
       start = getSlotBStartExamAddress(0);
       end = getSlotBEndExamAddress(0);
     }
@@ -77,7 +85,7 @@ uint8_t SlotsExamMode::FetchSlotExamMode(const char * version, const char * Slot
       start = getSlotBStartExamAddress(2);
       end = getSlotBEndExamAddress(2);
     }
-  } else if (Slot == "Khi") {
+  } else if (strcmp(Slot, "Khi") == 0) {
     // We directly get the address of the Khi exam mode without checking the
     // version, because on Khi, version is KhiCAS version, not the OS version
     start = getSlotKhiStartExamAddress();
@@ -97,16 +105,16 @@ uint8_t SlotsExamMode::FetchSlotExamMode(const char * version, const char * Slot
 
 
 
-uint8_t SlotsExamMode::FetchSlotAExamMode(const char* version) {
-  return FetchSlotExamMode(version, "A");
+uint8_t SlotsExamMode::FetchSlotAExamMode(const char* version, const char * patchLevel) {
+  return FetchSlotExamMode(version, "A", patchLevel);
 }
 
-uint8_t SlotsExamMode::FetchSlotBExamMode(const char* version) {
-  return FetchSlotExamMode(version, "B");
+uint8_t SlotsExamMode::FetchSlotBExamMode(const char* version, const char * patchLevel) {
+  return FetchSlotExamMode(version, "B", patchLevel);
 }
 
-uint8_t SlotsExamMode::FetchSlotKhiExamMode(const char* version) {
-  return FetchSlotExamMode(version, "Khi");
+uint8_t SlotsExamMode::FetchSlotKhiExamMode(const char* version, const char * patchLevel) {
+  return FetchSlotExamMode(version, "Khi", patchLevel);
 }
 
 uint8_t SlotsExamMode::examFetch15(uint32_t start, uint32_t end) {
@@ -190,6 +198,9 @@ uint32_t SlotsExamMode::getSlotAStartExamAddress(int ExamVersion) {
   if (ExamVersion == 2) {
     return SlotAExamModeBufferStartEpsilon22;
   }
+  if (ExamVersion == 3) {
+    return SlotAExamModeBufferStartGabiZar;
+  }
   assert(false);
   // Should not happen
   return SlotAExamModeBufferStartEpsilon22;
@@ -204,6 +215,9 @@ uint32_t SlotsExamMode::getSlotAEndExamAddress(int ExamVersion) {
   }
   if (ExamVersion == 2) {
     return SlotAExamModeBufferEndEpsilon22;
+  }
+  if (ExamVersion == 3) {
+    return SlotAExamModeBufferEndGabiZar;
   }
   assert(false);
   // Should not happen
@@ -221,6 +235,9 @@ uint32_t SlotsExamMode::getSlotBStartExamAddress(int ExamVersion) {
   if (ExamVersion == 2) {
     return SlotBExamModeBufferStartEpsilon22;
   }
+  if (ExamVersion == 3) {
+    return SlotBExamModeBufferStartGabiZar;
+  }
   assert(false);
   // Should not happen
   return SlotBExamModeBufferStartEpsilon22;
@@ -235,6 +252,9 @@ uint32_t SlotsExamMode::getSlotBEndExamAddress(int ExamVersion) {
   }
   if (ExamVersion == 2) {
     return SlotBExamModeBufferEndEpsilon22;
+  }
+  if (ExamVersion == 3) {
+    return SlotBExamModeBufferEndGabiZar;
   }
   assert(false);
   // Should not happen

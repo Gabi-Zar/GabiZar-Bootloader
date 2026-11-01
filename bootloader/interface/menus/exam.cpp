@@ -7,13 +7,12 @@
 #include <ion/src/device/shared/drivers/external_flash.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 Bootloader::ExamMenu::ExamMenu() : Menu(KDColorWhite, KDColorBlack, Messages::examMenuTitle, Messages::mainTitle) {
   setup();
 }
 
-/* Écrit des zéros dans [start, end), en adresses memory-mapped
- * (0x90000000 -> 0x90800000). Retourne false si la plage est invalide. */
 bool zeroExternalFlash(uint32_t start, uint32_t end) {
   constexpr uint32_t k_base = 0x90000000;
   constexpr size_t k_chunk = 4096;
@@ -21,7 +20,6 @@ bool zeroExternalFlash(uint32_t start, uint32_t end) {
     return false;
   }
 
-  // La source doit être en RAM (ou en flash interne), jamais en flash externe.
   static uint8_t zeros[k_chunk];
   for (size_t i = 0; i < k_chunk; i++) {
     zeros[i] = 0;
@@ -40,10 +38,15 @@ bool zeroExternalFlash(uint32_t start, uint32_t end) {
 bool slotA_exam_submenu() {
   if (Bootloader::Slot::isFullyValid(Bootloader::Slot::A())) {
     const char * version = Bootloader::Slot::A().userlandHeader()->version();
+    const char * patchLevel = Bootloader::Slot::A().kernelHeader()->patchLevel();
     uint32_t start = 0;
     uint32_t end = 0;
-    
-    if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
+
+    if (strncmp(patchLevel, "gabizar", 8) == 0) {
+      start = Bootloader::ExamMode::SlotsExamMode::getSlotAStartExamAddress(3);
+      end = Bootloader::ExamMode::SlotsExamMode::getSlotAEndExamAddress(3);
+    }
+    else if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
       start = Bootloader::ExamMode::SlotsExamMode::getSlotAStartExamAddress(0);
       end = Bootloader::ExamMode::SlotsExamMode::getSlotAEndExamAddress(0);
     }
@@ -78,10 +81,15 @@ bool slotKhi_exam_submenu() {
 bool slotB_exam_submenu() {
   if (Bootloader::Slot::isFullyValid(Bootloader::Slot::B())) {
     const char * version = Bootloader::Slot::B().userlandHeader()->version();
+    const char * patchLevel = Bootloader::Slot::B().kernelHeader()->patchLevel();
     uint32_t start = 0;
     uint32_t end = 0;
 
-    if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
+    if (strncmp(patchLevel, "gabizar", 8) == 0) {
+      start = Bootloader::ExamMode::SlotsExamMode::getSlotBStartExamAddress(3);
+      end = Bootloader::ExamMode::SlotsExamMode::getSlotBEndExamAddress(3);
+    }
+    else if (version[0] < '1' || (version[0] == '1' && version[1] < '6')) {
       start = Bootloader::ExamMode::SlotsExamMode::getSlotBStartExamAddress(0);
       end = Bootloader::ExamMode::SlotsExamMode::getSlotBEndExamAddress(0);
     }

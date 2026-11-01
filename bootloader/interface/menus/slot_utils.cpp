@@ -52,7 +52,7 @@ const char * getVersionText(Slot slot) {
 }
 
 const char * getExamState(Slot slot) {
-  return Slot::isFullyValid(slot) && (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotExamMode(slot.userlandHeader()->version(), GetSlotLetter(slot.address())) != Bootloader::ExamMode::ExamMode::Off && (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotExamMode(slot.userlandHeader()->version(), GetSlotLetter(slot.address())) != Bootloader::ExamMode::ExamMode::Unknown  ? "Exam: On" : "Exam: Off";
+  return Slot::isFullyValid(slot) && (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotExamMode(slot.userlandHeader()->version(), GetSlotLetter(slot.address()), slot.kernelHeader()->patchLevel()) != Bootloader::ExamMode::ExamMode::Off && (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotExamMode(slot.userlandHeader()->version(), GetSlotLetter(slot.address()), slot.kernelHeader()->patchLevel()) != Bootloader::ExamMode::ExamMode::Unknown  ? "Exam: On" : "Exam: Off";
 }
 
 }

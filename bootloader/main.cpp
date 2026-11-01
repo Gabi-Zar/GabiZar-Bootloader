@@ -22,7 +22,7 @@ __attribute__ ((noreturn)) void ion_main(int argc, const char * const argv[]) {
     bool isSlotA = Bootloader::Slot::isFullyValid(Bootloader::Slot::A());
 
     if (isSlotA) {
-      Bootloader::ExamMode::ExamMode SlotAExamMode = (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotAExamMode(Bootloader::Slot::A().userlandHeader()->version());
+      Bootloader::ExamMode::ExamMode SlotAExamMode = (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotAExamMode(Bootloader::Slot::A().userlandHeader()->version(), Bootloader::Slot::A().kernelHeader()->patchLevel());
       if (SlotAExamMode != Bootloader::ExamMode::ExamMode::Off && SlotAExamMode != Bootloader::ExamMode::ExamMode::Unknown) {
         // We boot the slot in exam_mode
         Bootloader::Slot::A().boot();
@@ -32,7 +32,7 @@ __attribute__ ((noreturn)) void ion_main(int argc, const char * const argv[]) {
     bool isSlotB = Bootloader::Slot::isFullyValid(Bootloader::Slot::B());
 
     if (isSlotB) {
-      Bootloader::ExamMode::ExamMode SlotBExamMode = (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotBExamMode(Bootloader::Slot::B().userlandHeader()->version());
+      Bootloader::ExamMode::ExamMode SlotBExamMode = (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotBExamMode(Bootloader::Slot::B().userlandHeader()->version(), Bootloader::Slot::B().kernelHeader()->patchLevel());
       if (SlotBExamMode != Bootloader::ExamMode::ExamMode::Off && SlotBExamMode != Bootloader::ExamMode::ExamMode::Unknown && isSlotB) {
         // We boot the slot in exam_mode
         Bootloader::Slot::B().boot();
@@ -44,7 +44,7 @@ __attribute__ ((noreturn)) void ion_main(int argc, const char * const argv[]) {
     bool isKhiSlot = Bootloader::Slot::isFullyValid(Bootloader::Slot::Khi());
 
     if (isKhiSlot) {
-      Bootloader::ExamMode::ExamMode KhiExamMode = (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotKhiExamMode(Bootloader::Slot::Khi().userlandHeader()->version());
+      Bootloader::ExamMode::ExamMode KhiExamMode = (Bootloader::ExamMode::ExamMode)Bootloader::ExamMode::SlotsExamMode::FetchSlotKhiExamMode(Bootloader::Slot::Khi().userlandHeader()->version(), Bootloader::Slot::Khi().kernelHeader()->patchLevel());
       if (KhiExamMode != Bootloader::ExamMode::ExamMode::Off && KhiExamMode != Bootloader::ExamMode::ExamMode::Unknown && isKhiSlot) {
         // We boot the slot in exam_mode
         Bootloader::Slot::Khi().boot();
